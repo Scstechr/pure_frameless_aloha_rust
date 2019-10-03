@@ -1,6 +1,6 @@
 use std::collections::HashMap;
-use std::time::Instant;
-use rayon::prelude::*;
+// use std::time::Instant;
+// use rayon::prelude::*;
 
 pub mod init;
 pub mod process;
@@ -8,8 +8,8 @@ pub mod process;
 const N           :u64 = 1000;
 const TRIAL       :u64 = 1000;
 // const TRIAL       :u64 = 1;
-const GMAX        :u64 = 11;
-const GMIN        :u64 = 10;
+const GMAX        :u64 = 15;
+const GMIN        :u64 = 5;
 
 #[derive(Debug)]
 pub struct Container {
@@ -40,20 +40,19 @@ pub fn run() {
     };
 
     println!("#N:{}/TRIAL:{}", N, TRIAL);
-    println!("G,PDR,T");
+    println!("G,TARGET_DEGREE,PDR,T");
     for g_ in GMIN..GMAX
     {
         if g_ > 0 {
-            let begin = Instant::now();
+            // let begin = Instant::now();
             // let g_ = 10.0;
             let g = g_ as f64 * 0.1;
-            config.m = (config.n as f64 / g) as u64;
+            config.m = (config.n as f64 * g) as u64;
+            let mut range: Vec<u64> = (0..=config.m - 1).collect::<Vec<u64>>();
             let mut max_degree = 0.0;
             let mut max_t = 0.0;
             let mut max_pdr = 0.0;
-
             let mut count = 0;
-            let mut range: Vec<u64> = (0..=config.m - 1).collect::<Vec<u64>>();
             // let t_ = 32;
             for t_ in 1..60 
             {
@@ -75,7 +74,7 @@ pub fn run() {
                     rate_sum += rate;
                 }
                 let pdr = rate_sum / TRIAL as f64;
-                let throughput = g * pdr;
+                let throughput = 1.0 / g * pdr;
                 if max_t < throughput {
                     max_t = throughput;
                     max_pdr = pdr;
@@ -88,7 +87,7 @@ pub fn run() {
                 }
             }
             println!("{:.3},{:.1},{:.8e},{:.8}", g, max_degree, max_pdr, max_t);
-            println!("Elapsed:{:?}", begin.elapsed());
+            // println!("Elapsed:{:?}", begin.elapsed());
         }
     }
 }
