@@ -1,12 +1,11 @@
-use rand_distr::{Poisson, Distribution};
+use rand_distr::{Poisson};
 use std::collections::HashMap;
 
 pub mod init;
 pub mod process;
 
-const MAXFUNCSIZE :usize = 20;
 const N           :u64 = 10;
-const TRIAL       :u64 = 5;
+const TRIAL       :u64 = 100;
 // const TRIAL       :u64 = 1;
 const GMAX        :u64 = 50;
 const GMIN        :u64 = 0;
@@ -49,22 +48,34 @@ pub fn run() {
     println!("G,PDR,T");
     {
         let g_ = 10.0;
-        let mut rate_sum = 0.0;
         let g = g_ as f64 * 0.1;
         config.m = (config.n as f64 / g) as u64;
-        for _ in 0..TRIAL
-        {
-            let target_degree = 3.2;
-            config.prob = target_degree / config.n as f64;
-            let mut range: Vec<u64> = (0..=config.m - 1).collect::<Vec<u64>>();
-            init::init_users(&config, &mut users, &mut range);
-            process::transmit(&users, &mut frame);
-            let decoded = process::sic(&users, &mut frame);
-            let rate = decoded as f64 / config.n as f64;
-            rate_sum += rate;
+        let mut max_degree = 0.0;
+        let mut max_t = 0.0;
+        let mut max_pdr = 0.0;
+        for t_ in 1..60 {
+            let target_degree = t_ as f64 * 0.1;
+            let mut rate_sum = 0.0;
+            for _ in 0..TRIAL
+            {
+                // let target_degree = 3.2;
+                config.prob = target_degree / config.n as f64;
+                let mut range: Vec<u64> = (0..=config.m - 1).collect::<Vec<u64>>();
+                init::init_users(&config, &mut users, &mut range);
+                process::transmit(&users, &mut frame);
+                let decoded = process::sic(&users, &mut frame);
+                let rate = decoded as f64 / config.n as f64;
+                rate_sum += rate;
+            }
+            let pdr = rate_sum / TRIAL as f64;
+            let throughput = g * pdr;
+            if max_t < throughput {
+                max_t = throughput;
+                max_pdr = pdr;
+                max_degree = target_degree;
+            }
         }
-        let pdr = rate_sum / TRIAL as f64;
-        let throughput = g * pdr;
-        println!("{:.3},{:.8e},{:.8}", g, pdr, throughput);
+
+        println!("{:.3},{:.1},{:.8e},{:.8}", g, max_degree, max_pdr, max_t);
     }
 }

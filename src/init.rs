@@ -4,8 +4,6 @@ use rand_distr::{Binomial, Distribution};
 
 use crate::Container;
 use crate::Config;
-use crate::MAXFUNCSIZE;
-use crate::N;
 
 pub fn init_users(config: &Config, users: &mut Vec<Container>, range: &mut Vec<u64>) {
   let mut r = rand::thread_rng();
