@@ -17,7 +17,6 @@ pub struct Container {
     len: u64,         // num. of rep.
     p: f64,
     obs: Vec<u64>,
-    decoded: bool,
 }
 
 pub struct Config {
@@ -55,12 +54,13 @@ pub fn run() {
         config.m = (config.n as f64 / g) as u64;
         for _ in 0..TRIAL
         {
+            println!("");
             let target_degree = 1.2;
             config.prob = target_degree / config.n as f64;
             let mut range: Vec<u64> = (0..=config.m - 1).collect::<Vec<u64>>();
-            println!("{:?}", range);
             init::init_users(&config, &mut users, &mut range);
             process::transmit(&users, &mut frame);
+            process::sic(&users, &mut frame);
         }
     }
 }

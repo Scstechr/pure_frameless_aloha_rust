@@ -16,7 +16,6 @@ pub fn init_users(config: &Config, users: &mut Vec<Container>, range: &mut Vec<u
       p: config.prob,
       len: 1,
       obs: Vec::new(),
-      decoded: false
     });
   }
   for mut user in users {
