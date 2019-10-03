@@ -6,7 +6,7 @@ pub mod process;
 
 const MAXFUNCSIZE :usize = 20;
 const N           :u64 = 10;
-const TRIAL       :u64 = 2;
+const TRIAL       :u64 = 5;
 // const TRIAL       :u64 = 1;
 const GMAX        :u64 = 50;
 const GMIN        :u64 = 0;
@@ -54,13 +54,17 @@ pub fn run() {
         config.m = (config.n as f64 / g) as u64;
         for _ in 0..TRIAL
         {
-            println!("");
-            let target_degree = 1.2;
+            let target_degree = 3.2;
             config.prob = target_degree / config.n as f64;
             let mut range: Vec<u64> = (0..=config.m - 1).collect::<Vec<u64>>();
             init::init_users(&config, &mut users, &mut range);
             process::transmit(&users, &mut frame);
-            process::sic(&users, &mut frame);
+            let decoded = process::sic(&users, &mut frame);
+            let rate = decoded as f64 / config.n as f64;
+            rate_sum += rate;
         }
+        let pdr = rate_sum / TRIAL as f64;
+        let throughput = g * pdr;
+        println!("{:.3},{:.8e},{:.8}", g, pdr, throughput);
     }
 }
