@@ -8,7 +8,9 @@ pub fn transmit(users: &Vec<Container>, frame: &mut HashMap<u64, Vec<u64>>) {
     for user in users {
         println!("{:?}", user);
         for s in user.obs.iter() {
-            ;
+            let cur = frame.entry(*s).or_insert([].to_vec());
+            cur.push(user.idx);
         }
     }
+    println!("{:?}", frame);
 }
