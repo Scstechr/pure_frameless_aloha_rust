@@ -1,6 +1,9 @@
 use rand_distr::{Poisson, Distribution};
 use std::collections::HashMap;
 
+pub mod init;
+pub mod process;
+
 const MAXFUNCSIZE :usize = 20;
 const N           :u64 = 10;
 const TRIAL       :u64 = 2;
@@ -12,7 +15,9 @@ const GMIN        :u64 = 0;
 pub struct Container {
     idx: u64,         // index on vec.
     len: u64,         // num. of rep.
+    p: f64,
     obs: Vec<u64>,
+    decoded: bool,
 }
 
 pub struct Config {
@@ -32,7 +37,7 @@ pub fn run() {
     let mut users: Vec<Container> = Vec::new();
 
     // Frame as HashMap
-    let mut frame: HashMap<u64, f64> = HashMap::new();
+    let mut frame: HashMap<u64, Vec<u64>> = HashMap::new();
 
     // Simulation Parameters
     let mut config = Config {
@@ -54,6 +59,8 @@ pub fn run() {
             config.prob = target_degree / config.n as f64;
             let mut range: Vec<u64> = (0..=config.m - 1).collect::<Vec<u64>>();
             println!("{:?}", range);
+            init::init_users(&config, &mut users, &mut range);
+            process::transmit(&users, &mut frame);
         }
     }
 }
