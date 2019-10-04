@@ -22,9 +22,9 @@ fn ic(user: &Container, frame: &mut HashMap<u64, Vec<u64>>) {
             }
             idx += 1;
         }
-        if idx < cur_.len() {
-            cur_.remove(idx);
-        }
+        // if idx < cur_.len() {
+        cur_.remove(idx);
+        // }
     }
 }
 
