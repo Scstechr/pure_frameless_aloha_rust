@@ -15,7 +15,8 @@ fn transmit(users: &Vec<Container>, frame: &mut HashMap<u64, Vec<u64>>) {
     }
 }
 
-fn ic(user: &Container, frame: &mut HashMap<u64, Vec<u64>>) {
+fn ic(user: &mut Container, frame: &mut HashMap<u64, Vec<u64>>) {
+    user.retrv = true;
     for s in user.obs.iter() {
         let cur = frame.entry(*s).or_insert([].to_vec());
         let idx = cur.iter().position(|&x| x == user.idx).unwrap();
@@ -23,29 +24,29 @@ fn ic(user: &Container, frame: &mut HashMap<u64, Vec<u64>>) {
     }
 }
 
-fn sic(users: &Vec<Container>, mut frame: &mut HashMap<u64, Vec<u64>>) -> usize{
-    // println!("{:?}", frame);
-    let mut decoded: Vec<usize> = vec![0;users.len()];
+fn sic(users: &mut Vec<Container>, mut frame: &mut HashMap<u64, Vec<u64>>) -> usize{
     let mut flag = true;
+    let mut count = 0;
+    println!("{:?}, {}", frame, count);
     while flag {
         flag = false;
-        for (idx, user) in users.iter().enumerate() {
-            if decoded[idx] == 0 {
+        for mut user in users.iter_mut() {
+            if !user.retrv {
                 for s in user.obs.iter() {
                     if frame.entry(*s).or_insert([].to_vec()).len() == 1 {
                         flag = true;
-                        decoded[idx] = 1;
-                        ic(&user, &mut frame);
+                        count += 1;
+                        ic(&mut user, &mut frame);
                         break;
                     }
                 }
             }
         }
         if flag {
-            println!("{:?}, {:?}", frame, decoded);
+            println!("{:?}, {}", frame, count);
         }
     }
-    decoded.iter().sum()
+    count
 }
 
 pub fn max_degree(config: &Config, mut users: &mut Vec<Container>, mut frame: &mut HashMap<u64, Vec<u64>>, mut range: &mut Vec<u64>) -> f64{
@@ -54,7 +55,7 @@ pub fn max_degree(config: &Config, mut users: &mut Vec<Container>, mut frame: &m
     {
         init::init_users(&config, &mut users, &mut range);
         transmit(&users, &mut frame);
-        let decoded = sic(&users, &mut frame);
+        let decoded = sic(&mut users, &mut frame);
         let rate = decoded as f64 / config.n as f64;
         rate_sum += rate;
         // rate_sum += process::proc_loop(&config, &mut users, &mut frame, &mut range);

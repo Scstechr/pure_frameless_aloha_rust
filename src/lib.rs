@@ -18,6 +18,7 @@ pub struct Container {
     len: u64,         // num. of rep.
     p: f64,
     obs: Vec<u64>,
+    retrv: bool,
 }
 
 pub struct Config {
