@@ -58,7 +58,6 @@ pub fn max_degree(config: &Config, mut users: &mut Vec<Container>, mut frame: &m
         let decoded = sic(&mut users, &mut frame);
         let rate = decoded as f64 / config.n as f64;
         rate_sum += rate;
-        // rate_sum += process::proc_loop(&config, &mut users, &mut frame, &mut range);
     }
     rate_sum
 }
