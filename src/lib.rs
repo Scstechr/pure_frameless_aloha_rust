@@ -1,6 +1,4 @@
 use std::collections::HashMap;
-// use std::time::Instant;
-// use rayon::prelude::*;
 
 pub mod init;
 pub mod process;
@@ -8,7 +6,7 @@ pub mod process;
 const N           :u64 = 1000;
 const TRIAL       :u64 = 1000;
 // const TRIAL       :u64 = 1;
-const GMAX        :u64 = 15;
+const GMAX        :u64 = 6;
 const GMIN        :u64 = 5;
 
 #[derive(Debug)]
