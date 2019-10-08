@@ -47,8 +47,6 @@ pub fn run() {
     // for g_ in GMIN..GMAX
     {
         if g_ > 0 {
-            // let begin = Instant::now();
-            // let g_ = 10.0;
             let g = g_ as f64 * 0.1;
             config.m = (config.n as f64 * g) as u64;
             let mut range: Vec<u64> = (0..=config.m - 1).collect::<Vec<u64>>();
