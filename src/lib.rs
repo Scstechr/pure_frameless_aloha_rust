@@ -55,20 +55,12 @@ pub fn run() {
             let mut max_pdr = 0.0;
             let mut count = 0;
             // let t_ = 32;
-            for t_ in 1..60 
+            for t in 1..60 
             {
-                let target_degree = t_ as f64 * 0.1;
+                let target_degree = t as f64 * 0.1;
                 config.prob = target_degree / config.n as f64;
-                let mut rate_sum = 0.0;
-                for _ in 0..TRIAL
-                {
-
-                    init::init_users(&config, &mut users, &mut range);
-                    process::transmit(&users, &mut frame);
-                    let decoded = process::sic(&users, &mut frame);
-                    let rate = decoded as f64 / config.n as f64;
-                    rate_sum += rate;
-                }
+                let rate_sum = process::max_degree(
+                    &config, &mut users, &mut frame, &mut range);
                 let pdr = rate_sum / TRIAL as f64;
                 let throughput = 1.0 / g * pdr;
                 if max_t < throughput {
