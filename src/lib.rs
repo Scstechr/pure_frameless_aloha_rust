@@ -6,8 +6,8 @@ pub mod process;
 const N           :u64 = 1000;
 const TRIAL       :u64 = 1000;
 // const TRIAL       :u64 = 1;
-const GMAX        :u64 = 6;
-const GMIN        :u64 = 5;
+const GMAX        :u64 = 14;
+const GMIN        :u64 = 2;
 
 #[derive(Debug)]
 pub struct Container {
