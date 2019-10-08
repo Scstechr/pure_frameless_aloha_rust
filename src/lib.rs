@@ -10,6 +10,7 @@ const TRIAL       :u64 = 1000;
 // const TRIAL       :u64 = 1;
 const GMAX        :u64 = 15;
 const GMIN        :u64 = 5;
+const DEBUG       :bool = true;
 
 #[derive(Debug)]
 pub struct Container {
@@ -63,13 +64,8 @@ pub fn run() {
                 {
 
                     init::init_users(&config, &mut users, &mut range);
-                    // println!("INITIALIZE:{:?}", begin.elapsed());
-                    // let begin = Instant::now();
                     process::transmit(&users, &mut frame);
-                    // println!("TRANSMIT:{:?}", begin.elapsed());
-                    // let begin = Instant::now();
                     let decoded = process::sic(&users, &mut frame);
-                    // println!("SIC:{:?}", begin.elapsed());
                     let rate = decoded as f64 / config.n as f64;
                     rate_sum += rate;
                 }

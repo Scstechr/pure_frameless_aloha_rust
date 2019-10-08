@@ -13,17 +13,18 @@ pub fn transmit(users: &Vec<Container>, frame: &mut HashMap<u64, Vec<u64>>) {
 }
 
 fn ic(user: &Container, frame: &mut HashMap<u64, Vec<u64>>) {
-    for s_ in user.obs.iter() {
-        let cur_ = frame.entry(*s_).or_insert([].to_vec());
+    for s in user.obs.iter() {
+        let cur = frame.entry(*s).or_insert([].to_vec());
+        // cur.remove(cur)
         let mut idx = 0;
-        for u in cur_.iter() {
+        for u in cur.iter() {
             if u == &user.idx {
                 break;
             }
             idx += 1;
         }
         // if idx < cur_.len() {
-        cur_.remove(idx);
+        cur.remove(idx);
         // }
     }
 }
