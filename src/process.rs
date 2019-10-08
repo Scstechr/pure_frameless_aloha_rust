@@ -19,17 +19,7 @@ fn ic(user: &Container, frame: &mut HashMap<u64, Vec<u64>>) {
     for s in user.obs.iter() {
         let cur = frame.entry(*s).or_insert([].to_vec());
         let idx = cur.iter().position(|&x| x == user.idx).unwrap();
-        // let mut idx = 0;
-        // for u in cur.iter() {
-        //     if u == &user.idx {
-        //         break;
-        //     }
-        //     idx += 1;
-        // }
-        // println!("idx, ridx = {}, {}", idx, ridx);
-        // if idx < cur_.len() {
         cur.remove(idx);
-        // }
     }
 }
 
