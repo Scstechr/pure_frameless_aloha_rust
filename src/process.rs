@@ -27,7 +27,7 @@ fn ic(user: &mut Container, frame: &mut HashMap<u64, Vec<u64>>) {
 fn sic(users: &mut Vec<Container>, mut frame: &mut HashMap<u64, Vec<u64>>) -> usize{
     let mut flag = true;
     let mut count = 0;
-    println!("{:?}, {}", frame, count);
+    // println!("{:?}, {}", frame, count);
     while flag {
         flag = false;
         for mut user in users.iter_mut() {
@@ -42,9 +42,9 @@ fn sic(users: &mut Vec<Container>, mut frame: &mut HashMap<u64, Vec<u64>>) -> us
                 }
             }
         }
-        if flag {
-            println!("{:?}, {}", frame, count);
-        }
+        // if flag {
+        //     println!("{:?}, {}", frame, count);
+        // }
     }
     count
 }
