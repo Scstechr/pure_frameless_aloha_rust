@@ -5,8 +5,8 @@ use std::collections::HashMap;
 pub mod init;
 pub mod process;
 
-const N           :u64 = 1000;
-const TRIAL       :u64 = 1000;
+const N           :u64 = 20;
+const TRIAL       :u64 = 1;
 // const TRIAL       :u64 = 1;
 const GMAX        :u64 = 15;
 const GMIN        :u64 = 5;
@@ -42,7 +42,8 @@ pub fn run() {
 
     println!("#N:{}/TRIAL:{}", N, TRIAL);
     println!("G,TARGET_DEGREE,PDR,T");
-    for g_ in GMIN..GMAX
+    let g_ = 6;
+    // for g_ in GMIN..GMAX
     {
         if g_ > 0 {
             // let begin = Instant::now();
@@ -54,8 +55,8 @@ pub fn run() {
             let mut max_t = 0.0;
             let mut max_pdr = 0.0;
             let mut count = 0;
-            // let t_ = 32;
-            for t in 1..60 
+            let t = 15;
+            // for t in 1..60 
             {
                 let target_degree = t as f64 * 0.1;
                 config.prob = target_degree / config.n as f64;
@@ -70,12 +71,14 @@ pub fn run() {
                 } else {
                     count += 1;
                 }
-                if count > 10 {
-                    break;
-                }
+                // if count > 10 {
+                //     break;
+                // }
             }
-            println!("{:.3},{:.1},{:.8e},{:.8}", g, max_degree, max_pdr, max_t);
+            if !DEBUG {
+                println!("{:.3},{:.1},{:.8e},{:.8}", g, max_degree, max_pdr, max_t);
             // println!("Elapsed:{:?}", begin.elapsed());
+            }
         }
     }
 }
