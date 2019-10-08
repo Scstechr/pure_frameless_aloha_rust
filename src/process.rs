@@ -59,5 +59,5 @@ pub fn max_degree(config: &Config, mut users: &mut Vec<Container>, mut frame: &m
         let rate = decoded as f64 / config.n as f64;
         rate_sum += rate;
     }
-    rate_sum
+    rate_sum / TRIAL as f64
 }

@@ -10,7 +10,6 @@ const TRIAL       :u64 = 1;
 // const TRIAL       :u64 = 1;
 const GMAX        :u64 = 15;
 const GMIN        :u64 = 5;
-const DEBUG       :bool = true;
 
 #[derive(Debug)]
 pub struct Container {
@@ -47,22 +46,25 @@ pub fn run() {
     // for g_ in GMIN..GMAX
     {
         if g_ > 0 {
-            let g = g_ as f64 * 0.1;
-            config.m = (config.n as f64 * g) as u64;
-            let mut range: Vec<u64> = (0..=config.m - 1).collect::<Vec<u64>>();
+
             let mut max_degree = 0.0;
             let mut max_t = 0.0;
             let mut max_pdr = 0.0;
             let mut count = 0;
+
+            let g = g_ as f64 * 0.1;
+            config.m = (config.n as f64 * g) as u64;
+            let mut range: Vec<u64> = (0..=config.m - 1).collect::<Vec<u64>>();
+
             let t = 15;
             // for t in 1..60 
             {
                 let target_degree = t as f64 * 0.1;
                 config.prob = target_degree / config.n as f64;
-                let rate_sum = process::max_degree(
+                let pdr = process::max_degree(
                     &config, &mut users, &mut frame, &mut range);
-                let pdr = rate_sum / TRIAL as f64;
                 let throughput = 1.0 / g * pdr;
+
                 if max_t < throughput {
                     max_t = throughput;
                     max_pdr = pdr;
@@ -74,10 +76,7 @@ pub fn run() {
                 //     break;
                 // }
             }
-            if !DEBUG {
-                println!("{:.3},{:.1},{:.8e},{:.8}", g, max_degree, max_pdr, max_t);
-            // println!("Elapsed:{:?}", begin.elapsed());
-            }
+            println!("{:.3},{:.1},{:.8e},{:.8}", g, max_degree, max_pdr, max_t);
         }
     }
 }
