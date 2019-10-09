@@ -1,10 +1,12 @@
+use std::fs::File;
+use std::io::{LineWriter, Write};
 use std::collections::HashMap;
 
 pub mod init;
 pub mod process;
 
-const N           :u64 = 1000;
-const TRIAL       :u64 = 1000;
+const N           :u64 = 100;
+const TRIAL       :u64 = 100;
 // const TRIAL       :u64 = 1;
 const GMAX        :u64 = 14;
 const GMIN        :u64 = 2;
@@ -24,7 +26,10 @@ pub struct Config {
     prob: f64,
 }
 
-pub fn run() {
+pub fn run(output: &String) {
+    // Output
+    let mut f = LineWriter::new(File::create(output).unwrap());
+
     // Users as vector
     let mut users: Vec<Container> = Vec::new();
 
@@ -38,7 +43,8 @@ pub fn run() {
         prob: 1.0,
     };
 
-    println!("#N:{}/TRIAL:{}", N, TRIAL);
+    let status = format!("#N:{}|trial:{}\n", N, TRIAL);
+    print!("{}", status);
     println!("G,TARGET_DEGREE,PDR,T");
     // let g_ = 6;
     let mut last_degree = 10;
@@ -52,7 +58,7 @@ pub fn run() {
             let mut count = 0;
 
             let g = g_ as f64 * 0.1;
-            config.m = (config.n as f64 * g) as u64;
+            config.m = (config.n as f64 / g) as u64;
             let mut range: Vec<u64> = (0..=config.m - 1).collect::<Vec<u64>>();
 
             // let t = 15;
@@ -62,7 +68,7 @@ pub fn run() {
                 config.prob = target_degree / config.n as f64;
                 let pdr = process::max_degree(
                     &config, &mut users, &mut frame, &mut range);
-                let throughput = 1.0 / g * pdr;
+                let throughput = g * pdr;
 
                 if max_t < throughput {
                     max_t = throughput;
@@ -79,7 +85,9 @@ pub fn run() {
             if last_degree < 10 {
                 last_degree = 10;
             }
-            println!("{:.3},{:.1},{:.8e},{:.8}", g, max_degree, max_pdr, max_t);
+            let w = format!("{:.3},{:.1},{:.8e},{:.8}\n", g, max_degree, max_pdr, max_t);
+            f.write(w.as_bytes()).unwrap();
+            print!("{}", w);
         }
     }
 }
